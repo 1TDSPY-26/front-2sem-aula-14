@@ -1,70 +1,79 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import type { TipoProduto } from "../../types/types";
-import { listaProdutos } from "../../data/listaProdutos";
+import { Link } from "react-router";
+import { FaRegEdit as Editar} from "react-icons/fa"
+import { MdDeleteForever as Deletar} from "react-icons/md";
 
 export default function Produtos() {
-  // Criamos o estado "produtos".
-  // - Ele começa vazio: []
-  // - Avisamos ao TypeScript que ele vai guardar uma lista de TipoProduto: <TipoProduto[]>
-  const [produtos, setProdutos] = useState<TipoProduto[]>([]);
 
-  // Esse efeito roda automaticamente quando a tela é montada
-  useEffect(() => {
-    // Pegamos a listaProdutos do arquivo e guardamos dentro do useState
-    setProdutos(listaProdutos);
+    const [produtos, setProdutos] = useState<TipoProduto[]>([]);
 
-    // O array vazio [] no final é o "segredo":
-    // Ele diz ao React: "Execute isso APENAS UMA VEZ, quando o componente nascer na tela".
-    // Se não colocar esse [], o React entraria em um loop infinito!
-  }, []);
-  return (
-    <main style={{ padding: "20px", fontFamily: "sans-serif" }}>
-      <h1>Painel de Produtos</h1>
-      <p>Confira abaixo a lista de itens cadastrados no sistema:</p>
+    useEffect(() => {
 
-      {/* Tabela com borda e espaçamento para ficar fácil de ler */}
-      <table
-        border={1}
-        cellPadding={10}
-        style={{ width: "100%", borderCollapse: "collapse", textAlign: "left" }}
-      >
-        {/* Cabeçalho da Tabela */}
-        <thead>
-          <tr style={{ backgroundColor: "#2c3e50", color: "#ffffff" }}>
-            <th>Foto</th>
-            <th>ID</th>
-            <th>Nome</th>
-            <th>Preço</th>
-            <th>Descrição</th>
-          </tr>
-        </thead>
+        //Realizando o GetAllProdutos
+        async function carregarProdutos() {
+            try {
 
-        {/* Corpo da Tabela com a repetição dos produtos */}
-        <tbody>
-          {produtos.map((item) => (
-            // A propriedade "key" é obrigatória no React quando usamos .map().
-            // Ela ajuda o React a saber exatamente qual item é qual através do ID único.
-            <tr key={item.id}>
-              <td>
-                <img
-                  src={item.avatar}
-                  alt={item.nome}
-                  width={60}
-                  height={60}
-                  style={{ objectFit: "cover", borderRadius: "8px" }}
-                />
-              </td>
-              <td>{item.id}</td>
-              <td>
-                <strong>{item.nome}</strong>
-              </td>
-              {/* toFixed(2) garante que o preço sempre tenha 2 casas decimais (ex: 299.90) */}
-              <td>R$ {item.preco.toFixed(2)}</td>
-              <td>{item.descricao}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </main>
-  );
+                const response = await fetch("http://localhost:3001/produtos");
+
+                if (!response.ok) {
+                    throw new Error("A listagem dos produtos falhou!");
+                }
+
+                const data: TipoProduto[] = await response.json();
+                setProdutos(data);
+
+            } catch (error) {
+                console.error(error);
+            }
+
+        }
+
+        carregarProdutos();
+
+    }, []);
+
+    return (
+        <main>
+            <h2>Produtos</h2>
+
+            <div>
+                <table border={1}>
+
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>NOME</th>
+                            <th>PREÇO</th>
+                            <th>ESTOQUE</th>
+                            <th>AÇÕES</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {produtos.map((p, i) => (
+                            <tr key={i}>
+                                <td>{p.id}</td>
+                                <td>{p.nome}</td>
+                                <td>{p.preco}</td>
+                                <td>{p.estoque}</td>
+                                <td>
+                                  <Link to={`/editar-produtos/${p.id}`}><Editar /></Link> <Deletar/>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+
+                    <tfoot>
+                        <tr>
+                            <td colSpan={5}>Quantidade de produtos: {produtos?.length}</td>
+                        </tr>
+                    </tfoot>
+
+                </table>
+            </div>
+
+
+        </main>
+    );
 }
