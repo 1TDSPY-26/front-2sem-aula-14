@@ -57,7 +57,8 @@ export default function Produtos() {
                                 <td>{p.id}</td>
                                 <td>{p.nome}</td>
                                 <td>{p.preco}</td>
-                                <td>{p.estoque}</td>
+                                <td>{p.descricao}</td>
+                                <td>{p.avatar}</td>
                                 <td> <Link to={`/editar-produtos/${p.id}`}> <Editar /> </Link> <Excluir/></td>
                             </tr>
                         ))}

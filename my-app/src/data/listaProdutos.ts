@@ -1,11 +1,6 @@
-<<<<<<< HEAD
 import type { TipoProduto } from "../types/types";
 
 // Usamos TipoProduto[] com colchetes para avisar que é uma LISTA (Array) desse molde.
-=======
-import type { TipoProduto } from '../types/types';
-
->>>>>>> 6b76bea6d6cbe9cff0de4cc0ac9a0912be8794e6
 export const listaProdutos: TipoProduto[] = [
     {
         id: 1,

@@ -1,8 +1,5 @@
-<<<<<<< HEAD
 // Aqui definimos o molde do nosso objeto de produto.
 // Cada produto OBRIGATORIAMENTE deve ter esses campos e esses tipos:
-=======
->>>>>>> 6b76bea6d6cbe9cff0de4cc0ac9a0912be8794e6
 // export interface TipoProduto {
 //     id: number;          // O número de identificação único
 //     nome: string;        // O nome do produto em texto
@@ -12,8 +9,9 @@
 // }
 
 export type TipoProduto = {
-    id: string;
+    id: number;
     nome: string;
     preco: number;
-    estoque: number;
+    descricao: string;
+    avatar: string;
 }
