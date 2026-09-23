@@ -9,9 +9,8 @@
 // }
 
 export type TipoProduto = {
-    id: number;
+    id: string;
     nome: string;
     preco: number;
-    descricao: string;
-    avatar: string;
+    estoque: number;
 }
