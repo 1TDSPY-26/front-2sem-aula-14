@@ -1,59 +1,42 @@
+import { useEffect, useState } from "react";
 import { useParams } from "react-router";
-
-const listaProdutos = [
-  {
-    id: 1,
-    nome: "Pintinho de Borracha",
-    preco: 19.99,
-  },
-  {
-    id: 2,
-    nome: "Porquinho de Plástico",
-    preco: 25.99,
-  },
-  {
-    id: 3,
-    nome: "Lobinho de Pelúcia",
-    preco: 29.99
-  }
-];
+import type { TipoProduto } from "../../types/types";
 
 export default function EditarProdutos() {
-  const { id } = useParams<string>();
+  const { id } = useParams<{ id: string }>();
 
-  const produto = listaProdutos.find((p) => p.id === Number(id));
+  const [produto, setProduto] = useState<TipoProduto>({} as TipoProduto);
 
-  const estojo = {
-    lapis: "Preto",
-    caneta: "Esferográfica",
-    borracha: "Branca",
-  };
+  useEffect(() => {
+    async function carregarProduto() {
+      try {
+        const response = await fetch(`http://localhost:5173/produtos/${id}`);
 
-  estojo.lapis;
-  estojo.caneta;
-  const { lapis, caneta } = estojo;
+        if (!response.ok) {
+          throw new Error("A listagem dos produtos falhou!");
+        }
 
-  const jogos = ["Sonic", "Mario", "Zelda"];
-  console.log(jogos[1]);
-  const [sonic, mario] = jogos;
+        const data: TipoProduto = await response.json();
+        setProduto(data);
+      } catch (error) {
+        console.error("Error: ", error);
+      }
+    }
+
+    carregarProduto();
+  }, []);
+
+  // const produto = listaProdutos.find((p) => p.id === Number(id))
 
   return (
     <main>
       <h2>Editar Produtos</h2>
       <p>Página para editar produtos.</p>
 
-      <p>Itens do Estojo</p>
-      <p>Lápis: {lapis} </p>
-      <p>Caneta: {caneta} </p>
-
-      <p>Itens do Estojo</p>
-      <p>Jogo: {sonic} </p>
-      <p>Jogo: {mario} </p>
-
       {produto ? (
         <div>
           <p>Nome: {produto.nome}</p>
-          <p>Nome: {produto.preco}</p>
+          <p>Preço: {produto.preco}</p>
         </div>
       ) : (
         <div>
