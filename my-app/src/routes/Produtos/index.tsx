@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import type { TipoProduto } from "../../types/types";
 import { Link } from "react-router";
+import { FaRegEdit as Editar} from "react-icons/fa";
+import { MdDeleteForever as Excluir} from "react-icons/md";
+
 
 export default function Produtos() {
 
@@ -55,7 +58,7 @@ export default function Produtos() {
                                 <td>{p.nome}</td>
                                 <td>{p.preco}</td>
                                 <td>{p.estoque}</td>
-                                <td>  <Link to={`/editar-produtos/${p.id}`}>EDITAR</Link> /EXCLUIR</td>
+                                <td>  <Link to={`/editar-produtos/${p.id}`}> <Editar/> </Link> / <Excluir/> </td>
                             </tr>
                         ))}
                     </tbody>
