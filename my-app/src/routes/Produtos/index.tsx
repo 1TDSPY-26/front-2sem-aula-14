@@ -1,6 +1,8 @@
-<<<<<<< HEAD
 import { useEffect, useState } from "react";
 import type { TipoProduto } from "../../types/types";
+import { Link } from "react-router";
+import { FaRegEdit as Editar } from "react-icons/fa";
+import {MdDelete as Excluir} from "react-icons/md";
 
 export default function Produtos() {
 
@@ -23,42 +25,17 @@ export default function Produtos() {
 
             } catch (error) {
                 console.error(error);
-=======
-import { useState, useEffect } from 'react';
-import { listaProdutos } from '../../data/listaProdutos';
-import type { TipoProduto } from '../../types/types';
 
-
-export default function Produtos() {
-
-    const[produtos, setProdutos] = useState<TipoProduto[]>([]);
-
-    useEffect( () => {
-
-        async function carregarProdutos(){
-         
-            try{
-
-                const response = await fetch("http://localhost:3001/produtos");
-
-                if(!response.ok){
-
-                }
->>>>>>> 6b76bea6d6cbe9cff0de4cc0ac9a0912be8794e6
             }
 
         }
 
-<<<<<<< HEAD
         carregarProdutos();
 
-=======
->>>>>>> 6b76bea6d6cbe9cff0de4cc0ac9a0912be8794e6
     }, []);
 
     return (
         <main>
-<<<<<<< HEAD
             <h2>Produtos</h2>
 
             <div>
@@ -81,7 +58,7 @@ export default function Produtos() {
                                 <td>{p.nome}</td>
                                 <td>{p.preco}</td>
                                 <td>{p.estoque}</td>
-                                <td>EDITAR/EXCLUIR</td>
+                                <td> <Link to={`/editar-produtos/${p.id}`}> <Editar /> </Link> <Excluir/></td>
                             </tr>
                         ))}
                     </tbody>
@@ -95,10 +72,7 @@ export default function Produtos() {
                 </table>
             </div>
 
-
-=======
             <h1>Página de Produtos</h1>
->>>>>>> 6b76bea6d6cbe9cff0de4cc0ac9a0912be8794e6
         </main>
     );
 }
