@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import type { TipoProduto } from "../../types/types";
 
 export default function EditarProdutos() {
+
+  const navigate = useNavigate();
+
   const { id } = useParams<{ id: string }>();
 
-  const [produto, setProduto] = useState<TipoProduto>({} as TipoProduto);
+  const [produto, setProduto] = useState<TipoProduto>({id: "", nome: "", preco: 0, estoque: 0});
 
   useEffect(() => {
     const carregarProduto = async () => {
@@ -26,11 +29,33 @@ export default function EditarProdutos() {
     carregarProduto();
   }, []);
 
-  // const produto = listaProdutos.find( ( p )=> p.id === Number(id));
-
   const alteraDadosCampo = (e:React.ChangeEvent<HTMLInputElement>)=>{
     const{ name, value } = e.target;
     setProduto({...produto, [name]: value});
+  }
+
+  const onSubmitForm = async ()=>{
+    // e.preventDefault();
+
+    try { 
+          const response = await fetch(`http://localhost:3001/produtos/${produto.id}`,{
+            method:"PUT",
+            headers:{
+              "Content-Type":"application/json"
+            },
+            body: JSON.stringify(produto)
+          });
+
+          if(!response.ok){
+            throw new Error(`Erro ao atualizar produto: ${response.status} ${response.statusText}`);
+          }
+
+          navigate("/produtos");
+
+    } catch (error) {
+      console.error(error); 
+    }
+
   }
 
   return (
@@ -53,7 +78,7 @@ export default function EditarProdutos() {
               <input type="number" name="preco" id="preco" value={produto.preco} onChange={(e)=> alteraDadosCampo(e)}/>
             </div>
             <div>
-                <button>Atualizar</button>
+                <button type="button" onClick={onSubmitForm}>Atualizar</button>
             </div>
           </fieldset>
         </form>

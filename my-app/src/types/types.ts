@@ -14,3 +14,7 @@ export type TipoProduto = {
     preco: number;
     estoque: number;
 }
+
+export type TipoProdutoProdutoProps = {
+    produto: TipoProduto;
+}

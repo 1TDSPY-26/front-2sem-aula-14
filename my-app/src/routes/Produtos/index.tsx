@@ -1,78 +1,72 @@
 import { useEffect, useState } from "react";
 import type { TipoProduto } from "../../types/types";
 import { Link } from "react-router";
-import { FaRegEdit as Editar} from "react-icons/fa";
-import { MdDeleteForever as Excluir} from "react-icons/md";
-
+import { FaRegEdit as Editar } from "react-icons/fa";
+import { MdDeleteForever as Excluir } from "react-icons/md";
+import CardProduto from "../../components/CardProduto";
 
 export default function Produtos() {
+  const [produtos, setProdutos] = useState<TipoProduto[]>([]);
 
-    const [produtos, setProdutos] = useState<TipoProduto[]>([]);
+  useEffect(() => {
+    //Realizando o GetAllProdutos
+    async function carregarProdutos() {
+      try {
+        const response = await fetch("http://localhost:3001/produtos");
 
-    useEffect(() => {
-
-        //Realizando o GetAllProdutos
-        async function carregarProdutos() {
-            try {
-
-                const response = await fetch("http://localhost:3001/produtos");
-
-                if (!response.ok) {
-                    throw new Error("A listagem dos produtos falhou!");
-                }
-
-                const data: TipoProduto[] = await response.json();
-                setProdutos(data);
-
-            } catch (error) {
-                console.error(error);
-            }
-
+        if (!response.ok) {
+          throw new Error("A listagem dos produtos falhou!");
         }
 
-        carregarProdutos();
+        const data: TipoProduto[] = await response.json();
+        setProdutos(data);
+      } catch (error) {
+        console.error(error);
+      }
+    }
 
-    }, []);
+    carregarProdutos();
+  }, []);
 
-    return (
-        <main>
-            <h2>Produtos</h2>
+  return (
+    <main>
+      <h2>Produtos</h2>
+      <table border={1}>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>NOME</th>
+            <th>PREÇO</th>
+            <th>ESTOQUE</th>
+            <th>AÇÕES</th>
+          </tr>
+        </thead>
 
-            <div>
-                <table border={1}>
+        <tbody>
+          {produtos.map((p, i) => (
+            <tr key={i}>
+              <td>{p.id}</td>
+              <td>{p.nome}</td>
+              <td>{p.preco}</td>
+              <td>{p.estoque}</td>
+              <td>
+                {" "}
+                <Link to={`/editar-produtos/${p.id}`}>
+                  {" "}
+                  <Editar />{" "}
+                </Link>{" "}
+                / <Excluir />{" "}
+              </td>
+            </tr>
+          ))}
+        </tbody>
 
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>NOME</th>
-                            <th>PREÇO</th>
-                            <th>ESTOQUE</th>
-                            <th>AÇÕES</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        {produtos.map((p, i) => (
-                            <tr key={i}>
-                                <td>{p.id}</td>
-                                <td>{p.nome}</td>
-                                <td>{p.preco}</td>
-                                <td>{p.estoque}</td>
-                                <td>  <Link to={`/editar-produtos/${p.id}`}> <Editar/> </Link> / <Excluir/> </td>
-                            </tr>
-                        ))}
-                    </tbody>
-
-                    <tfoot>
-                        <tr>
-                            <td colSpan={5}>Quantidade de produtos: {produtos?.length}</td>
-                        </tr>
-                    </tfoot>
-
-                </table>
-            </div>
-
-
-        </main>
-    );
+        <tfoot>
+          <tr>
+            <td colSpan={5}>Quantidade de produtos: {produtos?.length}</td>
+          </tr>
+        </tfoot>
+      </table>
+    </main>
+  );
 }
